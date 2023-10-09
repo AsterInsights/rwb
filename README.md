@@ -9,7 +9,7 @@ you expclitly `rwb logout`
 
 ## Installation
 
-Download the executable for your desired platform from [`releases`](https://github.com/AsterInsights/rwb/releases)[]
+Download the executable for your desired platform from [`releases`](https://github.com/AsterInsights/rwb/releases).
 
 ### Linux/Mac
 
