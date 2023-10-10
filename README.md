@@ -2,9 +2,7 @@
 
 # 🧬 Research Workbench Command Line Interface
 
-`rwb` is available for ORIEN partners on the Linux, Mac and Windows platforms.  Upon first run,
-you will be prompted for your ORIEN credentials, which will be cached securely for future runs, unless
-you expclitly `rwb logout`
+Research Workbench `rwb` is now available for ORIEN partners on Linux, Mac and Windows platforms. Upon the first run, you will be requested to input your ORIEN credentials, which will be cached securely to make future runs easily accessible, unless you explicitly `rwb logout`.
 
 
 ## Installation
