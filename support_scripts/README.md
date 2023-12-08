@@ -60,6 +60,8 @@ It takes the following parameters:
 * ```--destination-path```: OPTIONAL - The fully-qualified root directory you want the project to be delivered to. Defaults to your current working directory.
 * ```--verbose``` : Adds additional output to help diagnose issues
 * ```--no-dry-run```: Add this when you're ready to download
+* ```--include```: Only include given folders to download, for example ```--include /Clinical_Data```.
+* ```--exclude```: Exclude folders when downloading, for example ```--exclude /WES /RNAseq```.
 
 ```bash
 python3 download_project.py --project-id d6f3416e-d56f-41c4-b3eb-b084014b30d4 --exec ./rwb.osx.x64 --destination-path ~/download-test
@@ -87,7 +89,8 @@ Would download file /WES/tumor_vcfs/SL605546_st_t_markdup_recalibrated_Haplotype
 Would download file /WES/tumor_vcfs/SL605547_st_t_markdup_recalibrated_Haplotyper.vcf.gz to /Users/owynrichen/Documents/code/m2gen/download-test/WES/tumor_vcfs/SL605547_st_t_markdup_recalibrated_Haplotyper.vcf.gz - dry-run enabled
 Would download file /WES/tumor_vcfs/SL605547_st_t_markdup_recalibrated_Haplotyper.vcf.gz.md5 to /Users/owynrichen/Documents/code/m2gen/download-test/WES/tumor_vcfs/SL605547_st_t_markdup_recalibrated_Haplotyper.vcf.gz.md5 - dry-run enabled
 Would download file /WES/tumor_vcfs/SL605547_st_t_markdup_recalibrated_Haplotyper.vcf.gz.tbi to /Users/owynrichen/Documents/code/m2gen/download-test/WES/tumor_vcfs/SL605547_st_t_markdup_recalibrated_Haplotyper.vcf.gz.tbi - dry-run enabled
-Total Files: 1312882
+Total Files: 1,312,883
+Total Size: 346,063.81 GB
 ```
 
 ## Once All Is Good - DOWNLOAD!

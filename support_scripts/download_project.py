@@ -18,10 +18,12 @@ def get_full_path(file, current_folder, folders):
 def main():
     parser = argparse.ArgumentParser(description='Download an Aster Data Access Project.')
     parser.add_argument("--project-id", type=str, nargs=1, required=True, help="The project ID to download.")
-    parser.add_argument("--exec", type=str, nargs=1, required=True, help="The executable name.", default="rwb.osx.x64")
+    parser.add_argument("--exec", type=str, nargs=1, required=False, help="The executable name.", default="rwb")
     parser.add_argument("--verbose", default=False, action="store_true", help="Verbose output.")
     parser.add_argument("--no-dry-run", default=False, action="store_true", help="Don't actually download anything")
     parser.add_argument("--destination-path", type=str, nargs=1, required=False, help="The destination path to download the project to.")
+    parser.add_argument("--exclude", type=str, nargs='*', required=False, help="The folders excluded")
+    parser.add_argument("--include", type=str, nargs='*', required=False, help="The folders included")
 
     args = parser.parse_args(sys.argv[1:])
 
@@ -30,6 +32,12 @@ def main():
     verbose = args.verbose
     dry_run = not args.no_dry_run
     destination_path = args.destination_path.pop() if args.destination_path else os.getcwd()
+    folder_exclude = args.exclude
+    folder_include = args.include
+
+    if verbose:
+        print(f"folder included: {folder_include}")
+        print(f"folder excluded: {folder_exclude}")
 
     cmdline = f"{executable} project folders --project {project_id}"
 
@@ -44,6 +52,7 @@ def main():
     read_folders = {}
     files = []
     total_files = 0
+    total_size = 0.0
 
     for folder in projects["folders"]:
         if verbose:
@@ -56,6 +65,17 @@ def main():
         folder_id = folder_to_read["folderID"]
 
         print(f"Reading folder {folder_id} ({folder_to_read['fullFolderName']})")
+
+        if folder_include:
+            if folder_to_read['fullFolderName'] not in folder_include:
+                if verbose:
+                    print(f"Folder {folder_to_read['fullFolderName']} not included")
+                continue
+
+        if folder_exclude:
+            if folder_to_read['fullFolderName'] in folder_exclude:
+                print(f"Folder {folder_to_read['fullFolderName']} excluded")
+                continue
 
         if folder_id in read_folders:
             if verbose:
@@ -75,6 +95,10 @@ def main():
         for file in folder["files"]:
             file["fullPath"] = get_full_path(file, folder_to_read, read_folders)
 
+            if (file.get("size") != None):
+                total_size = total_size + file["size"]
+            else:
+                print(f"File {file['fileId']} ({file['fullPath']}) has no size...")
             if verbose:
                 print(f"Capturing {file['fileId']} ({file['fullPath']})")
 
@@ -110,7 +134,8 @@ def main():
         if verbose:
             print(download_output)
 
-    print(f"Total Files: {len(files)}")
+    print(f"Total Files: {len(files):,d}")
+    print(f"Total Size: {total_size / 1024.0 / 1024.0 / 1024.0:,.2f} GB")
     return
 
 if __name__ == "__main__":
