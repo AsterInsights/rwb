@@ -24,6 +24,7 @@ def main():
     parser.add_argument("--destination-path", type=str, nargs=1, required=False, help="The destination path to download the project to.")
     parser.add_argument("--exclude", type=str, nargs='*', required=False, help="The folders excluded")
     parser.add_argument("--include", type=str, nargs='*', required=False, help="The folders included")
+    parser.add_argument("--overwrite", default=False, action="store_true", help="Overwrite existing files instead of skip download if file exists and is the same size.")
 
     args = parser.parse_args(sys.argv[1:])
 
@@ -34,6 +35,7 @@ def main():
     destination_path = args.destination_path.pop() if args.destination_path else os.getcwd()
     folder_exclude = args.exclude
     folder_include = args.include
+    overwrite = args.overwrite
 
     if verbose:
         print(f"folder included: {folder_include}")
@@ -67,13 +69,13 @@ def main():
         print(f"Reading folder {folder_id} ({folder_to_read['fullFolderName']})")
 
         if folder_include:
-            if folder_to_read['fullFolderName'] not in folder_include:
+            if not any(folder_to_read['fullFolderName'].startswith(include) for include in folder_include):
                 if verbose:
                     print(f"Folder {folder_to_read['fullFolderName']} not included")
                 continue
 
         if folder_exclude:
-            if folder_to_read['fullFolderName'] in folder_exclude:
+            if any(folder_to_read['fullFolderName'].startswith(exclude) for exclude in folder_exclude):
                 print(f"Folder {folder_to_read['fullFolderName']} excluded")
                 continue
 
@@ -99,6 +101,7 @@ def main():
                 total_size = total_size + file["size"]
             else:
                 print(f"File {file['fileId']} ({file['fullPath']}) has no size...")
+
             if verbose:
                 print(f"Capturing {file['fileId']} ({file['fullPath']})")
 
@@ -123,6 +126,17 @@ def main():
 
             os.makedirs(directory)
         
+        if not overwrite:
+            file_path = os.path.join(destination_path,file["fullPath"].lstrip('/'))
+            file_exists = os.path.exists(file_path)
+            file_size = os.stat(file_path).st_size if file_exists else 0
+            if verbose:
+                print(f"Checking if file {file_path} exists ({file_exists}) and is the same size as {file['size']} ({file_size})")
+
+            if file_exists and file_size == file["size"]:
+                print(f"Skipping file {file['fullPath']}, already exists and is the same size")
+                continue
+
         print(f"Downloading file {file['fullPath']} to {destination_path}{file['fullPath']}")
         cmdline = f"{executable} file download --file-id {file['fileId']} --path {destination_path}{file['fullPath']}"
         
