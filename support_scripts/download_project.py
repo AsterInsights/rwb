@@ -94,14 +94,14 @@ def main():
         
         read_folders[folder_id] = folder_to_read
 
-        for file in folder["files"]:   
+        for file in folder["files"]:
             file["fullPath"] = get_full_path(file, folder_to_read, read_folders)
 
             if (file.get("size") != None):
                 total_size = total_size + file["size"]
             else:
                 print(f"File {file['fileId']} ({file['fullPath']}) has no size...")
-             
+
             if verbose:
                 print(f"Capturing {file['fileId']} ({file['fullPath']})")
 
