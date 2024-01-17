@@ -114,6 +114,17 @@ def main():
             folder_queue.insert(0, folder)
     
     for file in files:
+        if not overwrite:
+            file_path = os.path.join(destination_path,file["fullPath"].lstrip('/'))
+            file_exists = os.path.exists(file_path)
+            file_size = os.stat(file_path).st_size if file_exists else 0
+            if verbose:
+                print(f"Checking if file {file_path} exists ({file_exists}) and is the same size as {file['size']} ({file_size})")
+
+            if file_exists and file_size == file["size"]:
+                print(f"Skipping file {file['fullPath']}, already exists and is the same size")
+                continue
+
         if dry_run:
             print(f"Would download file {file['fullPath']} to {destination_path}{file['fullPath']} - dry-run enabled")
             continue
@@ -126,17 +137,6 @@ def main():
 
             os.makedirs(directory)
         
-        if not overwrite:
-            file_path = os.path.join(destination_path,file["fullPath"].lstrip('/'))
-            file_exists = os.path.exists(file_path)
-            file_size = os.stat(file_path).st_size if file_exists else 0
-            if verbose:
-                print(f"Checking if file {file_path} exists ({file_exists}) and is the same size as {file['size']} ({file_size})")
-
-            if file_exists and file_size == file["size"]:
-                print(f"Skipping file {file['fullPath']}, already exists and is the same size")
-                continue
-
         print(f"Downloading file {file['fullPath']} to {destination_path}{file['fullPath']}")
         cmdline = f"{executable} file download --file-id {file['fileId']} --path {destination_path}{file['fullPath']}"
         
