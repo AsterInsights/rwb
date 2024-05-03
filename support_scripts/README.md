@@ -62,9 +62,10 @@ It takes the following parameters:
 * ```--no-dry-run```: Add this when you're ready to download
 * ```--include```: Only include given folders to download, for example ```--include /Clinical_Data```.
 * ```--exclude```: Exclude folders when downloading, for example ```--exclude /WES /RNAseq```.
+* ```--workers```: The number of workers you'd like to run to download files in parallel, defaults to 1
 
 ```bash
-python3 download_project.py --project-id d6f3416e-d56f-41c4-b3eb-b084014b30d4 --exec ./rwb.osx.x64 --destination-path ~/download-test
+python3 download_project.py --project-id d6f3416e-d56f-41c4-b3eb-b084014b30d4 --exec ./rwb.osx.x64 --destination-path ~/download-test --workers 10
 ```
 
 It'll print a ton of stuff, but here's a summarized example:
@@ -83,12 +84,19 @@ Reading folder ad6499dc-e170-4e34-a9a1-b084015a9051 (/WES)
 
 ...
 
-Would download file /WES/tumor_vcfs/SL605546_st_t_markdup_recalibrated_Haplotyper.vcf.gz to /Users/owynrichen/Documents/code/m2gen/download-test/WES/tumor_vcfs/SL605546_st_t_markdup_recalibrated_Haplotyper.vcf.gz - dry-run enabled
-Would download file /WES/tumor_vcfs/SL605546_st_t_markdup_recalibrated_Haplotyper.vcf.gz.md5 to /Users/owynrichen/Documents/code/m2gen/download-test/WES/tumor_vcfs/SL605546_st_t_markdup_recalibrated_Haplotyper.vcf.gz.md5 - dry-run enabled
-Would download file /WES/tumor_vcfs/SL605546_st_t_markdup_recalibrated_Haplotyper.vcf.gz.tbi to /Users/owynrichen/Documents/code/m2gen/download-test/WES/tumor_vcfs/SL605546_st_t_markdup_recalibrated_Haplotyper.vcf.gz.tbi - dry-run enabled
-Would download file /WES/tumor_vcfs/SL605547_st_t_markdup_recalibrated_Haplotyper.vcf.gz to /Users/owynrichen/Documents/code/m2gen/download-test/WES/tumor_vcfs/SL605547_st_t_markdup_recalibrated_Haplotyper.vcf.gz - dry-run enabled
-Would download file /WES/tumor_vcfs/SL605547_st_t_markdup_recalibrated_Haplotyper.vcf.gz.md5 to /Users/owynrichen/Documents/code/m2gen/download-test/WES/tumor_vcfs/SL605547_st_t_markdup_recalibrated_Haplotyper.vcf.gz.md5 - dry-run enabled
-Would download file /WES/tumor_vcfs/SL605547_st_t_markdup_recalibrated_Haplotyper.vcf.gz.tbi to /Users/owynrichen/Documents/code/m2gen/download-test/WES/tumor_vcfs/SL605547_st_t_markdup_recalibrated_Haplotyper.vcf.gz.tbi - dry-run enabled
+worker0:1 | Would download file /RNAseq/alignment_crams/FT-SA109383R.genome.cram to /Users/owynrichen/download-test/RNAseq/alignment_crams/FT-SA109383R.genome.cram - dry-run enabled
+worker0:2 | Would download file /RNAseq/alignment_crams/FT-SA109383R.genome.cram.crai to /Users/owynrichen/download-test/RNAseq/alignment_crams/FT-SA109383R.genome.cram.crai - dry-run enabled
+worker0:3 | Would download file /RNAseq/alignment_crams/FT-SA109383R.genome.cram.md5 to /Users/owynrichen/download-test/RNAseq/alignment_crams/FT-SA109383R.genome.cram.md5 - dry-run enabled
+worker0:4 | Would download file /RNAseq/alignment_crams/FT-SA109385R.genome.cram to /Users/owynrichen/download-test/RNAseq/alignment_crams/FT-SA109385R.genome.cram - dry-run enabled
+worker0:5 | Would download file /RNAseq/alignment_crams/FT-SA109385R.genome.cram.crai to /Users/owynrichen/download-test/RNAseq/alignment_crams/FT-SA109385R.genome.cram.crai - dry-run enabled
+worker0:6 | Would download file /RNAseq/alignment_crams/FT-SA109385R.genome.cram.md5 to /Users/owynrichen/download-test/RNAseq/alignment_crams/FT-SA109385R.genome.cram.md5 - dry-run enabled
+worker0:7 | Would download file /RNAseq/alignment_crams/FT-SA109386R.genome.cram to /Users/owynrichen/download-test/RNAseq/alignment_crams/FT-SA109386R.genome.cram - dry-run enabled
+worker0:8 | Would download file /RNAseq/alignment_crams/FT-SA109386R.genome.cram.crai to /Users/owynrichen/download-test/RNAseq/alignment_crams/FT-SA109386R.genome.cram.crai - dry-run enabled
+worker0:9 | Would download file /RNAseq/alignment_crams/FT-SA109386R.genome.cram.md5 to /Users/owynrichen/download-test/RNAseq/alignment_crams/FT-SA109386R.genome.cram.md5 - dry-run enabled
+worker0:10 | Would download file /RNAseq/alignment_crams/FT-SA109387R.genome.cram to /Users/owynrichen/download-test/RNAseq/alignment_crams/FT-SA109387R.genome.cram - dry-run enabled
+worker0:11 | Would download file /RNAseq/alignment_crams/FT-SA109387R.genome.cram.crai to /Users/owynrichen/download-test/RNAseq/alignment_crams/FT-SA109387R.genome.cram.crai - dry-run enabled
+worker0:12 | Would download file /RNAseq/alignment_crams/FT-SA109387R.genome.cram.md5 to /Users/owynrichen/download-test/RNAseq/alignment_crams/FT-SA109387R.genome.cram.md5 - dry-run enabled
+
 Total Files: 1,312,883
 Total Size: 346,063.81 GB
 ```
