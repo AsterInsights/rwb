@@ -24,3 +24,6 @@ mv ~/Downloads/rwb.linux.x64 /usr/local/bin/rwb
 chmod +x /usr/local/bin/rwb
 rwb project list
 ```
+
+## Support Scripts
+The supporting scripts in the accompanying supporting_scripts.zip file are recommended as a companion to downloading the executable. The Python scripts make it possible to manage downloads and select what will be downloaded. The scripts are revised at times, and contributions to script functionality are gratefully accepted and will be incorporated in future releases.
