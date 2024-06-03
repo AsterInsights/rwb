@@ -26,4 +26,4 @@ rwb project list
 ```
 
 ## Support Scripts
-The supporting scripts in the accompanying supporting_scripts.zip file are recommended as a companion to downloading the executable. The Python scripts make it possible to manage downloads and select what will be downloaded. The scripts are revised at times, and contributions to script functionality are gratefully accepted and will be incorporated in future releases.
+The supporting scripts in the accompanying supporting_scripts.zip file are recommended as a companion to downloading the executable. The Python scripts make it possible to manage downloads and select what will be downloaded. The scripts are revised at times, and contributions to script functionality are gratefully accepted and will be incorporated in future releases. The support scripts require Python 3.7 or above, and permits downloads on multiple threads.
