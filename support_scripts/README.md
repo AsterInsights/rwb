@@ -62,6 +62,12 @@ It takes the following parameters:
 * ```--no-dry-run```: Add this when you're ready to download
 * ```--include```: Only include given folders to download, for example ```--include /Clinical_Data```.
 * ```--exclude```: Exclude folders when downloading, for example ```--exclude /WES /RNAseq```.
+* ```--file-filter```: Regex filter to identify files to download, for example:   
+  * ```--file-filter "SL000001"``` (files that include _SL000001_)
+  * ```--file-filter "^SL000001\.genome\.cram$"``` (file with exact match to _SL000001.genome.cram_)
+  * ```--file-filter "\.cram$" ``` (files that endswith _.cram_)
+  * ```--file-filter "\.(zip|md5)$"``` (files that endswith _.zip_ or _.md5_)  
+  * to edit/validate regexes, please check https://pythex.org/. 
 * ```--workers```: The number of workers you'd like to run to download files in parallel, defaults to 1
 
 ```bash
