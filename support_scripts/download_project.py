@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import argparse
 import json
@@ -24,6 +25,7 @@ async def main():
     parser.add_argument("--destination-path", type=str, nargs=1, required=False, help="The destination path to download the project to.")
     parser.add_argument("--exclude", type=str, nargs='*', required=False, help="The folders excluded")
     parser.add_argument("--include", type=str, nargs='*', required=False, help="The folders included")
+    parser.add_argument("--file-filter", type=str, nargs=1, required=False, help="the regex filter to identify files to download")
     parser.add_argument("--overwrite", default=False, action="store_true", help="Overwrite existing files instead of skip download if file exists and is the same size.")
     parser.add_argument("--workers", type=int, required=False, help="The number of workers to use for downloading files.", default=1)
 
@@ -36,12 +38,23 @@ async def main():
     destination_path = args.destination_path.pop() if args.destination_path else os.getcwd()
     folder_exclude = args.exclude
     folder_include = args.include
+    file_filter = args.file_filter[0] if args.file_filter else None
+    file_filter_regex = None
     overwrite = args.overwrite
     workers = args.workers
 
+    if file_filter:
+        try:
+            file_filter_regex = re.compile(file_filter)
+        except re.error as e:
+            print(f"File Filter regex error: {e.msg}")
+            return
+
+    
     if verbose:
         print(f"folder included: {folder_include}")
         print(f"folder excluded: {folder_exclude}")
+        print(f"File filter: {file_filter}")
 
     cmdline = f"{executable} project folders --project {project_id}"
 
@@ -54,9 +67,13 @@ async def main():
 
     if stderr:
         print(stderr.decode())
-        return
 
-    projects = json.loads(response)
+    try:
+        projects = json.loads(response)
+        folders = projects["folders"]
+    except (json.JSONDecodeError, KeyError):
+        print(f"Failed to read folder list.")
+        return    
 
     print(f"Downloading project ({project_id}) using {executable} with verbose={verbose}, dry-run={dry_run} and destination path {destination_path} with {workers} workers.")
 
@@ -68,7 +85,7 @@ async def main():
 
     ## Iterate over all folders to build file list
 
-    for folder in projects["folders"]:
+    for folder in folders:
         if verbose:
             print(f"Capturing {folder['folderID']} ({folder['fullFolderName']})")
 
@@ -109,16 +126,24 @@ async def main():
             raise Exception(f'Failed to read folder. Empty response from {cmdline}\n[stderr]\n{stderr.decode()}')
 
         if stderr:
-            raise Exception(f'Error returned from {cmdline}\n[stderr]\n{stderr.decode()}')
+            print(f'Error returned from {cmdline}\n[stderr]\n{stderr.decode()}')        
+        
+        try:
+            response = stdout.decode()
+            folder = json.loads(response)
+            read_folders[folder_id] = folder_to_read
+            files_in_folder = folder["files"]
+        except (json.JSONDecodeError, KeyError):
+            print(f"Failed to read folder {folder_to_read['fullFolderName']}.")
+            return
 
-        response = stdout.decode()
-
-        folder = json.loads(response)
-
-        read_folders[folder_id] = folder_to_read
-
-        for file in folder["files"]:
+        for file in files_in_folder:
             file["fullPath"] = get_full_path(file, folder_to_read, read_folders)
+            
+            if file_filter and not file_filter_regex.search(file["name"]):
+                if verbose:
+                    print(f"File '{file['fullPath']}' ignored. File name doesn't match regex.")
+                continue
 
             if (file.get("size") != None):
                 total_size = total_size + file["size"]
@@ -182,7 +207,7 @@ async def main():
                     raise Exception(f'Failed to read folder. Empty response from {cmdline}\n[stderr]\n{stderr.decode()}')
 
                 if stderr:
-                    raise Exception(f'Error returned from {cmdline}\n[stderr]\n{stderr.decode()}')
+                    print(f'Error returned from {cmdline}\n[stderr]\n{stderr.decode()}')
 
                 if verbose:
                     download_output = stdout.decode()
