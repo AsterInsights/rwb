@@ -33,3 +33,8 @@ Molecular downloads necessarily involve large numbers of large files. As the sop
 ```python
 python3 download_project.py --project-id <your project id> --exec ./rwb.osx.x64 --workers 2 --include /Avatar_MolecularData_hg38/2024_05_31/Whole_Exome/tumor_vcfs
 ```
+
+It is also possible with recent versions of the RWB support scripts to download only files for a single sample library id (SLID). Since SLID is included as part of each filename, the following command line will download all the files for a specific SLID in a project:
+```python
+python3 download_project.py --project-id <your project id> --exec ./rwb.osx.x64 --workers 2 --include /Avatar_MolecularData_hg38/2024_05_31 --destination-path ~/download-test --file-filter "<SLID>"
+```
